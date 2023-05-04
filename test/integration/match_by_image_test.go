@@ -578,7 +578,7 @@ func TestMatchByImage(t *testing.T) {
 
 			userImage := "docker-archive:" + tarPath
 
-			sourceInput, err := source.ParseInput(userImage, "", true)
+			sourceInput, err := source.ParseInput(userImage, "")
 			require.NoError(t, err)
 
 			// this is purely done to help setup mocks
@@ -600,10 +600,11 @@ func TestMatchByImage(t *testing.T) {
 
 			vp, err := db.NewVulnerabilityProvider(theStore)
 			require.NoError(t, err)
+			mp := db.NewVulnerabilityMetadataProvider(theStore)
 			ep := db.NewMatchExclusionProvider(theStore)
 			str := store.Store{
 				Provider:          vp,
-				MetadataProvider:  nil,
+				MetadataProvider:  mp,
 				ExclusionProvider: ep,
 			}
 

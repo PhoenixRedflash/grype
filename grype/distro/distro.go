@@ -87,5 +87,15 @@ func (d Distro) String() string {
 }
 
 func (d Distro) IsRolling() bool {
-	return d.Type == Wolfi || d.Type == ArchLinux || d.Type == Gentoo
+	return d.Type == Wolfi || d.Type == Chainguard || d.Type == ArchLinux || d.Type == Gentoo
+}
+
+// Unsupported Linux distributions
+func (d Distro) Disabled() bool {
+	switch {
+	case d.Type == ArchLinux:
+		return true
+	default:
+		return false
+	}
 }

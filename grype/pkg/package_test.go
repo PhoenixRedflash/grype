@@ -423,7 +423,66 @@ func TestNew(t *testing.T) {
 			syftPkg: syftPkg.Package{
 				MetadataType: syftPkg.BinaryMetadataType,
 				Metadata: syftPkg.BinaryMetadata{
-					Classifier: "classifier",
+					Matches: []syftPkg.ClassifierMatch{
+						{
+							Classifier: "node",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "nix-store-metadata",
+			syftPkg: syftPkg.Package{
+				MetadataType: syftPkg.NixStoreMetadataType,
+				Metadata: syftPkg.NixStoreMetadata{
+					OutputHash: "a",
+					Output:     "a",
+					Files: []string{
+						"a",
+					},
+				},
+			},
+		},
+		{
+			name: "linux-kernel-metadata",
+			syftPkg: syftPkg.Package{
+				MetadataType: syftPkg.LinuxKernelMetadataType,
+				Metadata: syftPkg.LinuxKernelMetadata{
+					Name:            "a",
+					Architecture:    "a",
+					Version:         "a",
+					ExtendedVersion: "a",
+					BuildTime:       "a",
+					Author:          "a",
+					Format:          "a",
+					RWRootFS:        true,
+					SwapDevice:      10,
+					RootDevice:      11,
+					VideoMode:       "a",
+				},
+			},
+		},
+		{
+			name: "linux-kernel-module-metadata",
+			syftPkg: syftPkg.Package{
+				MetadataType: syftPkg.LinuxKernelModuleMetadataType,
+				Metadata: syftPkg.LinuxKernelModuleMetadata{
+					Name:          "a",
+					Version:       "a",
+					SourceVersion: "a",
+					Path:          "a",
+					Description:   "a",
+					Author:        "a",
+					License:       "a",
+					KernelVersion: "a",
+					VersionMagic:  "a",
+					Parameters: map[string]syftPkg.LinuxKernelModuleParameter{
+						"a": {
+							Type:        "a",
+							Description: "a",
+						},
+					},
 				},
 			},
 		},
