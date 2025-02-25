@@ -9,31 +9,33 @@ import (
 
 	"github.com/anchore/grype/grype/distro"
 	"github.com/anchore/grype/grype/pkg"
-	"github.com/anchore/grype/internal"
+	"github.com/anchore/grype/internal/stringutil"
 	syftPkg "github.com/anchore/syft/syft/pkg"
 )
 
 func TestMatcherPortage_Match(t *testing.T) {
 	matcher := Matcher{}
-	p := pkg.Package{
-		ID:      pkg.ID(uuid.NewString()),
-		Name:    "app-misc/neutron",
-		Version: "2014.1.3",
-		Type:    syftPkg.PortagePkg,
-	}
 
 	d, err := distro.New(distro.Gentoo, "", "")
 	if err != nil {
 		t.Fatal("could not create distro: ", err)
 	}
 
+	p := pkg.Package{
+		ID:      pkg.ID(uuid.NewString()),
+		Name:    "app-misc/neutron",
+		Version: "2014.1.3",
+		Type:    syftPkg.PortagePkg,
+		Distro:  d,
+	}
+
 	store := newMockProvider()
-	actual, err := matcher.Match(store, d, p)
+	actual, _, err := matcher.Match(store, p)
 	assert.NoError(t, err, "unexpected err from Match", err)
 
 	assert.Len(t, actual, 1, "unexpected indirect matches count")
 
-	foundCVEs := internal.NewStringSet()
+	foundCVEs := stringutil.NewStringSet()
 	for _, a := range actual {
 		foundCVEs.Add(a.Vulnerability.ID)
 

@@ -57,6 +57,14 @@ func NewFromRelease(release linux.Release) (*Distro, error) {
 		}
 	}
 
+	if t == Debian && release.VersionID == "" && release.Version == "" && strings.Contains(release.PrettyName, "sid") {
+		return &Distro{
+			Type:       t,
+			RawVersion: "unstable",
+			IDLike:     release.IDLike,
+		}, nil
+	}
+
 	return New(t, selectedVersion, release.IDLike...)
 }
 
@@ -70,6 +78,22 @@ func (d Distro) MajorVersion() string {
 		return strings.Split(d.RawVersion, ".")[0]
 	}
 	return fmt.Sprintf("%d", d.Version.Segments()[0])
+}
+
+// MinorVersion returns the minor version value from the pseudo-semantically versioned distro version value.
+func (d Distro) MinorVersion() string {
+	if d.Version == nil {
+		parts := strings.Split(d.RawVersion, ".")
+		if len(parts) > 1 {
+			return parts[1]
+		}
+		return ""
+	}
+	parts := d.Version.Segments()
+	if len(parts) > 1 {
+		return fmt.Sprintf("%d", parts[1])
+	}
+	return ""
 }
 
 // FullVersion returns the original user version value.
